@@ -1,0 +1,19 @@
+class ........        
+        self.combo2 = QComboBox(self)
+        self.combo2.addItems(["Przekrój prostokątny", "Przekrój prostokątny", "Przekrój kołowy",])
+        self.combo2.move(30, 300)
+        self.combo2.setMinimumSize(200,30)
+        self.combo2.currentIndex.connect(self.typ_przekroju)
+        self.combo2.count()
+
+
+    def typ_obrazu(self, combo2):
+        obraz1 = QPixmap("PRZEKROJ_PROSTOKATNY.PNG")
+        obraz2 = QPixmap("PRZEKROJ_DWUTEOWY.PNG")
+        obraz3 = QPixmap("PRZEKROJ_KOLOWY.PNG")
+
+        if combo2.currentIndex == 1:
+
+            return obraz1
+            
+       ########## I tak dalej z ifami
