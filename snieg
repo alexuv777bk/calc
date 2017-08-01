@@ -174,9 +174,87 @@ class Mapa_Obc_Sniegiem(QMainWindow):
     def zamknij_okno(self):
         self.hide()
 
-class Wsp_Eksp_Ce(QMainWindow):
+class Wsp_Term_Ct(QWidget):
     def __init__(self, parent=None):
-        pass
+        super(Wsp_Term_Ct, self).__init__(parent)
+
+        self.setFixedSize(600,550)
+        self.setWindowTitle("Wspolczynnik termiczny")
+
+        self.zawartosc_okna_ct()
+
+    def zawartosc_okna_ct(self):
+#ROW 2
+        self.labl = QLabel(self)
+        self.labl.setText("<u>Wspolczynnik termiczny<u>")
+
+        self.radio_ct_domysl = QRadioButton(self)
+        self.radio_ct_domysl.setText("Wartosc domyslna 1,0")
+        self.radio_ct_domysl. setChecked(True)
+        self.radio_ct_domysl.resize(150,20)
+
+#Row 2
+        self.radio_ct_obl = QRadioButton(self)
+        self.radio_ct_obl.setText("Wartosc domyslna 1,0")
+        #self.radio_ct_obl.resize(150, 20)
+#ROW 3
+        #self.sk_lbl = QLabel("Sk" + "[kN/m²")
+
+#Row 4
+        self.roznica_temp_spin = QDoubleSpinBox(self)
+        self.roznica_temp_spin.setSingleStep(0.1)
+        self.roznica_temp_spin.setSuffix(" [℃]" )
+        self.roznica_temp_spin.setValue(20)
+        self.roznica_temp_spin.setMaximumWidth(150)
+
+#Row 5
+        #self.wsp_U_spin = QDoubleSpinBox()
+        #self.wsp_U_spin.setSingleStep(0.1)
+        #self.wsp_U_spin.setSuffix(" [[W/m²/K]]" )
+        #self.wsp_U_spin.setValue(2.5)
+        #self.wsp_U_spin.setMaximumWidth(150)
+        
+
+
+# LAYOUT
+        self.wsp_term_form = QFormLayout()
+        self.wsp_term_form.sizeHint()
+        self.wsp_term_form.addRow(self.labl, self.radio_ct_domysl)
+        self.wsp_term_form.addRow(QLabel("Wartosc obliczona"), self.radio_ct_obl)
+        self.wsp_term_obl.addRow(QLabel("Wartosc charakterystyczna obciazenia sniegiem gruntu : "), self.sk_lbl)
+        self.wsp_term_obl.addRow(QLabel("Roznica temperatur ΔT : "), self.roznica_temp_spin)
+        self.wsp_term_obl.addRow(QLabel("Wspolczynnik przenikania ciepla przegrody : "), self.wsp_U_spin)
+
+        self.setLayout(self.wsp_term_form)
+
+
+
+    def zamknij_okno(self):
+        self.hide()
+
+class Wsp_Eksp_Ce(QMainWindow):
+
+#TO JEST DO POPRAWY
+    def __init__(self, parent=None):
+        super(Wsp_Eksp_Ce, self).__init__(parent)
+        self.setGeometry(100,100,600,550)
+        self.setFixedSize(300,150)
+        self.setWindowTitle("Wspolczynnik termiczny")
+
+        self.wsp_ct_lbl = QLabel(self)
+        self.wsp_ct_lbl.move(10,10)
+        self.wsp_ct_lbl.setText("<u>Wspolczynnik termiczny<u>")
+        self.wsp_ct_teks_lbl = QLabel(self)
+        self.wsp_ct_teks_lbl.resize(280,50)
+        self.wsp_ct_teks_lbl.move(10,30)
+        self.wsp_ct_teks_lbl.setText("Wspolczynnik zmniejszajacy obciazenie sniegiem \n"
+                                     "dla dachow o wspolczynniku przenikania ciepla \n"
+                                     " > 1 [W/m²/K] (np. szklanych). Zalecana wartosc: 1,0")
+
+
+        self.zamknij_btn = QPushButton("Zamknij", self)
+        self.zamknij_btn.clicked.connect(self.zamknij_okno)
+        self.zamknij_btn.move(500,500)
 
     def zamknij_okno(self):
         self.hide()
