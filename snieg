@@ -174,41 +174,6 @@ class Mapa_Obc_Sniegiem(QMainWindow):
     def zamknij_okno(self):
         self.hide()
 
-class Wsp_Term_Ct(QWidget):
-    def __init__(self, parent=None):
-        super(Wsp_Term_Ct, self).__init__(parent)
-
-        self.setFixedSize(600,550)
-        self.setWindowTitle("Wspolczynnik termiczny")
-
-        self.zawartosc_okna_ct()
-
-    def zawartosc_okna_ct(self):
-#ROW
-        self.labl = QLabel(self)
-        self.labl.setText("<u>Wspolczynnik termiczny<u>")
-
-        self.radio_ct_domysl = QRadioButton(self)
-        self.radio_ct_domysl.setText("Wartosc domyslna 1,0")
-        self.radio_ct_domysl. setChecked(True)
-        self.radio_ct_domysl.resize(150,20)
-
-
-        self.radio_ct_obl = QRadioButton(self)
-        self.radio_ct_obl.setText("Wartosc domyslna 1,0")
-        #self.radio_ct_obl.resize(150, 20)
-
-
-        self.wsp_term_form = QFormLayout()
-        self.wsp_term_form.sizeHint()
-        self.wsp_term_form.addRow(self.labl, self.radio_ct_domysl)
-        self.wsp_term_form.addRow(QLabel("Wartosc obliczona"), self.radio_ct_obl)
-
-        self.setLayout(self.wsp_term_form)
-
-    def zamknij_okno(self):
-        self.hide()
-
 class Wsp_Eksp_Ce(QMainWindow):
     def __init__(self, parent=None):
         super(Wsp_Eksp_Ce, self).__init__(parent)
