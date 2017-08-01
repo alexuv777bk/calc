@@ -1,0 +1,246 @@
+# -*- coding: utf8 -*-
+
+import sys
+import math
+
+from PyQt5.QtWidgets import *
+from PyQt5.QtGui import *
+from PyQt5.QtCore import *
+
+
+class Obciazenie_Sniegiem(QWidget):
+    def __init__(self, parent=None):
+        super(Obciazenie_Sniegiem, self).__init__(parent)
+
+        #self.layout_okna()
+        self.zawartosc_okna()
+
+
+        self.show()
+
+
+
+    def zawartosc_okna(self):
+
+#ROW 1
+        self.rodzaj_dachu_combo = QComboBox(self)
+        self.rodzaj_dachu_combo.setMaximumWidth(150)
+        self.rodzaj_dachu_combo.addItems(
+            ["Dach jednospadowy", "Dach dwuspadowy", "Dach wielospadowy", "Dach walcowy" ])
+#ROW 2
+        self.strefa_snieg_combo = QComboBox(self)
+        self.strefa_snieg_combo.setMaximumWidth(150)
+        self.strefa_snieg_combo.addItems(["1", "2", "3", "4", "5"])
+
+        self.mapa_ico_btn = QPushButton("")
+        self.mapa_ico_btn.setMaximumWidth(33)
+        self.mapa_ico_btn.setIconSize(QSize(25,25))
+        self.mapa_ico_btn.setIcon(QIcon("map_32.PNG"))
+        self.mapa_ico_btn.clicked.connect(self.Mapa_Obc_Sniegiem)
+        self.okno_mapa = Mapa_Obc_Sniegiem(self)
+
+        self.strefa_snieg_hbox = QHBoxLayout()
+
+        self.strefa_snieg_hbox.addWidget( self.strefa_snieg_combo)
+        self.strefa_snieg_hbox.addWidget(self.mapa_ico_btn)
+
+#ROW3
+
+        self.wys_npm_spin = QDoubleSpinBox(self)
+        self.wys_npm_spin.setSuffix(" [m.n.p.m.]")
+        self.wys_npm_spin.setMaximum(1500)
+        self.wys_npm_spin.setMaximumWidth(150)
+        self.wys_npm_spin.setSingleStep(0.5)
+        self.wys_npm_spin.setValue(200)
+
+
+#ROW 4
+        self.kat_dachu_lbl = QLabel("Kat nachylenia polaci :")
+
+
+        self.alpha1_lbl = QLabel("α<sub>1</sub> = ")
+        self.alpha1_spin = QDoubleSpinBox(self)
+        self.alpha1_spin.setMaximum(89.99)
+        self.alpha1_spin.setSuffix("°")
+        self.alpha1_spin.setMinimumWidth(42)
+        self.alpha1_spin.setSingleStep(0.5)
+        self.alpha1_spin.setValue(45)
+        self.alpha1_spin.resize(100, 20)
+
+
+        self.alpha2_lbl = QLabel("α<sub>2</sub> = ")
+        self.alpha2_spin = QDoubleSpinBox(self)
+        self.alpha2_spin.setMaximum(89.99)
+        self.alpha2_spin.setMinimumWidth(42)
+        self.alpha2_spin.setSingleStep(0.5)
+        self.alpha2_spin.setValue(45)
+        self.alpha2_spin.resize(100, 20)
+        self.alpha2_spin.setSuffix("°")
+
+
+        self.kat_dachu_hbox = QHBoxLayout()
+
+        self.kat_dachu_hbox.addWidget(self.alpha1_lbl)
+        self.kat_dachu_hbox.addWidget(self.alpha1_spin)
+        self.kat_dachu_hbox.addWidget(self.alpha2_lbl)
+        self.kat_dachu_hbox.addWidget(self.alpha2_spin)
+        self.kat_dachu_hbox.addStretch()
+
+#ROW 5
+        self.c_t_spin = QDoubleSpinBox(self)
+        self.c_t_spin.setSingleStep(0.1)
+        self.c_t_spin.setValue(1)
+        self.c_t_spin.setMaximumWidth(150)
+
+
+        self.question_ico_btn_ct = QPushButton("")
+        self.question_ico_btn_ct.setMaximumWidth(33)
+        self.question_ico_btn_ct.setIconSize(QSize(25, 25))
+        self.question_ico_btn_ct.setIcon(QIcon("question_32.PNG"))
+        self.question_ico_btn_ct.clicked.connect(self.Wsp_Term_Ct)
+        self.okno_ct = Wsp_Term_Ct(self)
+
+        self.c_t_hbox = QHBoxLayout()
+
+        self.c_t_hbox.addWidget(self.c_t_spin)
+        self.c_t_hbox.addWidget(self.question_ico_btn_ct)
+
+#ROW 6
+        self.c_e_spin = QDoubleSpinBox(self)
+        self.c_e_spin.setSingleStep(0.1)
+        self.c_e_spin.setValue(1)
+        self.c_e_spin.setMaximumWidth(150)
+
+        self.question_ico_btn_ce = QPushButton("")
+        self.question_ico_btn_ce.setMaximumWidth(33)
+        self.question_ico_btn_ce.setIconSize(QSize(25, 25))
+        self.question_ico_btn_ce.setIcon(QIcon("question_32.PNG"))
+        self.question_ico_btn_ce.clicked.connect(self.Wsp_Eksp_Ce)
+        self.okno_ce = Wsp_Eksp_Ce(self)
+
+        self.c_e_hbox = QHBoxLayout()
+
+        self.c_e_hbox.addWidget(self.c_e_spin)
+        self.c_e_hbox.addWidget(self.question_ico_btn_ce)
+
+#ROW 7
+        self.barierka_check = QCheckBox(self)
+
+
+### LAYOUT ###
+        self.dane_snieg = QFormLayout()
+        self.dane_snieg.addRow(QLabel("Rodzaj dachu : "), self.rodzaj_dachu_combo)
+        self.dane_snieg.addRow(QLabel("Strefa obciazenia sniegiem : "), self.strefa_snieg_hbox)
+        self.dane_snieg.addRow(QLabel("Wysokosc nad poziomem morza : "), self.wys_npm_spin)
+        self.dane_snieg.addRow(self.kat_dachu_lbl, self.kat_dachu_hbox)
+        self.dane_snieg.addRow(QLabel("Wspolczynnik termiczny C<sub>t</sub> : "), self.c_t_hbox)
+        self.dane_snieg.addRow(QLabel("Wspolczynnik ekspozycji C<sub>e</sub> : "), self.c_e_hbox)
+        self.dane_snieg.addRow(QLabel("Barierki sniezne : "), self.barierka_check)
+
+
+        self.setLayout(self.dane_snieg)
+
+
+
+    def Mapa_Obc_Sniegiem(self):
+        self.okno_mapa.show()
+
+    def Wsp_Term_Ct(self):
+        self.okno_ct.show()
+
+    def Wsp_Eksp_Ce(self):
+        self.okno_ce.show()
+
+class Mapa_Obc_Sniegiem(QMainWindow):
+    def __init__(self, parent=None):
+        super(Mapa_Obc_Sniegiem, self).__init__(parent)
+        self.setGeometry(100,100,600,550)
+        self.setFixedSize(600,550)
+        self.setWindowTitle("Strefy obciazenia gruntu sniegiem w Polsce")
+
+        self.strefy_lbl = QLabel(self)
+        self.strefy_lbl.setText("<u>Strefy obciazenia sniegiem<u>")
+        self.strefy_lbl.resize(200, 20)
+        self.strefy_lbl.move(10,10)
+        self.mapa_lbl = QLabel(self)
+        self.mapa_lbl.move(10,10)
+        self.mapa_lbl.resize(600, 500)
+        self.mapa_lbl.setPixmap(QPixmap("mapa_obc_sniegiem.PNG"))
+
+        self.zamknij_btn = QPushButton("Zamknij", self)
+        self.zamknij_btn.clicked.connect(self.zamknij_okno)
+        self.zamknij_btn.move(500,500)
+
+    def zamknij_okno(self):
+        self.hide()
+
+class Wsp_Term_Ct(QWidget):
+    def __init__(self, parent=None):
+        super(Wsp_Term_Ct, self).__init__(parent)
+
+        self.setFixedSize(600,550)
+        self.setWindowTitle("Wspolczynnik termiczny")
+
+        self.zawartosc_okna_ct()
+
+    def zawartosc_okna_ct(self):
+#ROW
+        self.labl = QLabel(self)
+        self.labl.setText("<u>Wspolczynnik termiczny<u>")
+
+        self.radio_ct_domysl = QRadioButton(self)
+        self.radio_ct_domysl.setText("Wartosc domyslna 1,0")
+        self.radio_ct_domysl. setChecked(True)
+        self.radio_ct_domysl.resize(150,20)
+
+
+        self.radio_ct_obl = QRadioButton(self)
+        self.radio_ct_obl.setText("Wartosc domyslna 1,0")
+        #self.radio_ct_obl.resize(150, 20)
+
+
+        self.wsp_term_form = QFormLayout()
+        self.wsp_term_form.sizeHint()
+        self.wsp_term_form.addRow(self.labl, self.radio_ct_domysl)
+        self.wsp_term_form.addRow(QLabel("Wartosc obliczona"), self.radio_ct_obl)
+
+        self.setLayout(self.wsp_term_form)
+
+    def zamknij_okno(self):
+        self.hide()
+
+class Wsp_Eksp_Ce(QMainWindow):
+    def __init__(self, parent=None):
+        super(Wsp_Eksp_Ce, self).__init__(parent)
+        self.setGeometry(100,100,600,550)
+        self.setFixedSize(300,150)
+        self.setWindowTitle("Wspolczynnik termiczny")
+
+        self.wsp_ct_lbl = QLabel(self)
+        self.wsp_ct_lbl.move(10,10)
+        self.wsp_ct_lbl.setText("<u>Wspolczynnik termiczny<u>")
+        self.wsp_ct_teks_lbl = QLabel(self)
+        self.wsp_ct_teks_lbl.resize(280,50)
+        self.wsp_ct_teks_lbl.move(10,30)
+        self.wsp_ct_teks_lbl.setText("Wspolczynnik zmniejszajacy obciazenie sniegiem \n"
+                                     "dla dachow o wspolczynniku przenikania ciepla \n"
+                                     " > 1 [W/m²/K] (np. szklanych). Zalecana wartosc: 1,0")
+
+
+        self.zamknij_btn = QPushButton("Zamknij", self)
+        self.zamknij_btn.clicked.connect(self.zamknij_okno)
+        self.zamknij_btn.move(500,500)
+
+    def zamknij_okno(self):
+        self.hide()
+
+application = QApplication(sys.argv)
+
+# window
+dane_geom = Obciazenie_Sniegiem()
+dane_geom.setWindowIcon(QIcon("glowna.png"))
+dane_geom.setWindowTitle("Charakterystyka przekroju")
+dane_geom.resize(800, 600)
+dane_geom.show()
+
+sys.exit(application.exec_())
